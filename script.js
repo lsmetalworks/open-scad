@@ -144,6 +144,8 @@ LWPOLYLINE
 0
 90
 4
+70
+1
 10
 0
 20
@@ -155,11 +157,11 @@ ${width}
 10
 ${width}
 20
-${height}
+${-height}  <-- FIXED Y-COORDINATES
 10
 0
 20
-${height}
+${-height}  <-- FIXED Y-COORDINATES
 10
 0
 20
@@ -174,7 +176,7 @@ CIRCLE
 10
 ${width / 2}
 20
-${height / 2}
+${-height / 2}  <-- FIXED Y-COORDINATES
 30
 0
 40
@@ -191,7 +193,7 @@ CIRCLE
 10
 ${holeX}
 20
-${holeY}
+${-holeY}  <-- FIXED Y-COORDINATES
 30
 0
 40
@@ -216,6 +218,5 @@ EOF
     link.click();
     document.body.removeChild(link);
 }
-
 
 window.exportDXF = exportDXF;
