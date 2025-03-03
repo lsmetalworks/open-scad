@@ -144,8 +144,6 @@ LWPOLYLINE
 0
 90
 4
-70
-1
 10
 0
 20
@@ -157,11 +155,11 @@ ${width}
 10
 ${width}
 20
-${-height}  <-- FIXED Y-COORDINATES
+${height}
 10
 0
 20
-${-height}  <-- FIXED Y-COORDINATES
+${height}
 10
 0
 20
@@ -176,7 +174,7 @@ CIRCLE
 10
 ${width / 2}
 20
-${-height / 2}  <-- FIXED Y-COORDINATES
+${height / 2}
 30
 0
 40
@@ -193,7 +191,7 @@ CIRCLE
 10
 ${holeX}
 20
-${-holeY}  <-- FIXED Y-COORDINATES
+${holeY}
 30
 0
 40
@@ -220,6 +218,3 @@ EOF
 }
 
 window.exportDXF = export DXF;
-
-
-
