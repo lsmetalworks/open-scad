@@ -13,6 +13,7 @@ window.onload = function () {
         let holeOffsetY = parseFloat(document.getElementById("holeOffsetY").value) * 10;
 
         let shape;
+
         const shapeLeft = 100;
         const shapeTop = 100;
 
@@ -37,6 +38,39 @@ window.onload = function () {
                 stroke: "black",
                 strokeWidth: 2
             });
+        } else if (shapeType === "triangle") {
+            shape = new fabric.Polygon([
+                { x: shapeLeft, y: shapeTop },
+                { x: shapeLeft + width, y: shapeTop },
+                { x: shapeLeft + width / 2, y: shapeTop - height }
+            ], {
+                fill: "transparent",
+                stroke: "black",
+                strokeWidth: 2
+            });
+        } else if (shapeType === "hexagon") {
+            shape = new fabric.Polygon([
+                { x: shapeLeft, y: shapeTop },
+                { x: shapeLeft + width / 2, y: shapeTop - height / 2 },
+                { x: shapeLeft + width, y: shapeTop },
+                { x: shapeLeft + width, y: shapeTop + height / 2 },
+                { x: shapeLeft + width / 2, y: shapeTop + height },
+                { x: shapeLeft, y: shapeTop + height / 2 }
+            ], {
+                fill: "transparent",
+                stroke: "black",
+                strokeWidth: 2
+            });
+        } else if (shapeType === "ellipse") {
+            shape = new fabric.Ellipse({
+                left: shapeLeft,
+                top: shapeTop,
+                rx: width / 2,
+                ry: height / 2,
+                fill: "transparent",
+                stroke: "black",
+                strokeWidth: 2
+            });
         }
 
         canvas.add(shape);
@@ -44,6 +78,9 @@ window.onload = function () {
         if (holeDiameter > 0) {
             let holeX = shapeLeft + holeOffsetX;
             let holeY = shapeTop + holeOffsetY;
+
+            holeX = Math.max(shapeLeft + holeDiameter / 2, Math.min(holeX, shapeLeft + width - holeDiameter / 2));
+            holeY = Math.max(shapeTop + holeDiameter / 2, Math.min(holeY, shapeTop + height - holeDiameter / 2));
 
             let hole = new fabric.Circle({
                 left: holeX,
@@ -58,12 +95,14 @@ window.onload = function () {
     }
 
     function exportDXF() {
-        if (!window.DxfWriter) {
+        if (typeof window.DxfWriter === "undefined") {
             console.error("DxfWriter is not loaded correctly!");
+            alert("DXF export failed: js-dxf library did not load properly.");
             return;
         }
 
         const dxf = new window.DxfWriter();
+
         canvas.getObjects().forEach(obj => {
             if (obj.type === "rect") {
                 dxf.addRectangle(obj.left, obj.top, obj.width, obj.height);
