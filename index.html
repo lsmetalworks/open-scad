@@ -19,6 +19,7 @@
         }
         .container {
             display: flex;
+<<<<<<< HEAD
             flex-direction: column;
             align-items: center;
         }
@@ -31,8 +32,18 @@
         canvas {
             width: 100%;
             height: auto;
+=======
+            justify-content: space-around;
+            align-items: flex-start;
         }
-        input, select, button {
+        #canvas-container {
+            border: 1px solid #000;
+            width: 400px;
+            height: 400px;
+>>>>>>> parent of 11e4537 (Update index.html)
+        }
+        input {
+            width: 100px;
             margin: 5px;
         }
     </style>
@@ -40,6 +51,7 @@
 <body>
     <h1>DXF Shape Generator</h1>
     <div class="container">
+<<<<<<< HEAD
         <label for="shape">Choose Shape:</label>
         <select id="shape">
             <option value="rectangle">Rectangle</option>
@@ -72,6 +84,41 @@
         <br>
         <div id="canvas-container">
             <canvas id="canvas"></canvas>
+=======
+        <div>
+            <label for="shape">Choose Shape:</label>
+            <select id="shape">
+                <option value="rectangle">Rectangle</option>
+                <option value="circle">Circle</option>
+                <option value="triangle">Triangle</option>
+                <option value="hexagon">Hexagon</option>
+                <option value="ellipse">Ellipse</option>
+            </select>
+            <br>
+            <label>Width (max 24"):</label>
+            <input type="number" id="width" min="1" max="24" value="10">
+            <br>
+            <label>Height (max 24"):</label>
+            <input type="number" id="height" min="1" max="24" value="10">
+            <br>
+            <label>Corner Radius (for Rectangles):</label>
+            <input type="number" id="radius" min="0" max="12" value="0">
+            <br>
+            <label>Hole Diameter:</label>
+            <input type="number" id="holeDiameter" min="0" max="12" value="1">
+            <br>
+            <label>Hole Offset from Left Edge:</label>
+            <input type="number" id="holeOffsetX" min="0" max="24" value="2">
+            <br>
+            <label>Hole Offset from Top Edge:</label>
+            <input type="number" id="holeOffsetY" min="0" max="24" value="2">
+            <br>
+            <button onclick="drawShape()">Generate Shape</button>
+            <button onclick="exportDXF()">Export DXF</button>
+        </div>
+        <div>
+            <canvas id="canvas" width="400" height="400"></canvas>
+>>>>>>> parent of 11e4537 (Update index.html)
         </div>
     </div>
 
