@@ -104,3 +104,43 @@ window.onload = function () {
 
     window.drawShape = drawShape;
 };
+
+// Place exportDXF function OUTSIDE of window.onload to make sure it's globally accessible
+function exportDXF() {
+    console.log("Exporting DXF...");
+
+    // Get the Fabric.js canvas instance
+    const canvas = fabric.Canvas.activeInstance;
+    if (!canvas) {
+        console.error("Canvas not found!");
+        return;
+    }
+
+    const objects = canvas.getObjects(); // Get Fabric.js objects
+
+    // Generate a DXF string (basic implementation)
+    let dxfContent = "0\nSECTION\n2\nHEADER\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nBLOCKS\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n";
+
+    objects.forEach(obj => {
+        if (obj.type === "rect") {
+            dxfContent += `0\nLWPOLYLINE\n8\n0\n10\n${obj.left}\n20\n${obj.top}\n10\n${obj.left + obj.width}\n20\n${obj.top}\n10\n${obj.left + obj.width}\n20\n${obj.top + obj.height}\n10\n${obj.left}\n20\n${obj.top + obj.height}\n`;
+        } else if (obj.type === "circle") {
+            dxfContent += `0\nCIRCLE\n8\n0\n10\n${obj.left}\n20\n${obj.top}\n40\n${obj.radius}\n`;
+        }
+        // Add other shapes as needed
+    });
+
+    dxfContent += "0\nENDSEC\n0\nEOF";
+
+    // Create a blob and trigger a download
+    const blob = new Blob([dxfContent], { type: "application/dxf" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "drawing.dxf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Attach exportDXF to the global window object so it can be accessed from HTML
+window.exportDXF = exportDXF;
