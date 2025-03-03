@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DXF Generator</title>
 
-    <!-- Load Fabric.js -->
+    <!-- Load Fabric.js and DXF Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-dxf/0.7.8/dxf.min.js"></script>
 
@@ -19,20 +19,38 @@
             display: flex;
             justify-content: space-around;
             align-items: flex-start;
+            margin-top: 20px;
         }
         #canvas-container {
             border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 400px;
             height: 400px;
+            position: relative;
         }
-        input {
-            width: 100px;
+        input, select, button {
             margin: 5px;
+            padding: 5px;
+        }
+        button {
+            cursor: pointer;
+            font-weight: bold;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
     <h1>DXF Shape Generator</h1>
+    
     <div class="container">
         <div>
             <label for="shape">Choose Shape:</label>
@@ -65,11 +83,14 @@
             <button onclick="drawShape()">Generate Shape</button>
             <button onclick="exportDXF()">Export DXF</button>
         </div>
-        <div>
+
+        <!-- Canvas Container -->
+        <div id="canvas-container">
             <canvas id="canvas" width="400" height="400"></canvas>
         </div>
     </div>
 
+    <!-- Ensure script.js is loaded after the page is fully rendered -->
     <script src="script.js"></script>
 </body>
 </html>
