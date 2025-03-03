@@ -103,35 +103,119 @@ window.onload = function () {
     window.drawShape = drawShape;
 };
 
-function exportDXF() {
-    if (!canvas) {
-        console.error("Canvas not found!");
-        return;
+function function exportDXF() {
+    let dxfContent = `
+0
+SECTION
+2
+HEADER
+0
+ENDSEC
+0
+SECTION
+2
+TABLES
+0
+ENDSEC
+0
+SECTION
+2
+BLOCKS
+0
+ENDSEC
+0
+SECTION
+2
+ENTITIES
+`;
+
+    const shapeType = document.getElementById("shape").value;
+    const width = Math.min(parseFloat(document.getElementById("width").value), 24) * 10;
+    const height = Math.min(parseFloat(document.getElementById("height").value), 24) * 10;
+    const holeDiameter = parseFloat(document.getElementById("holeDiameter").value) * 10;
+    const holeX = parseFloat(document.getElementById("holeX").value) * 10;
+    const holeY = parseFloat(document.getElementById("holeY").value) * 10;
+
+    if (shapeType === "rectangle") {
+        dxfContent += `
+0
+LWPOLYLINE
+8
+0
+90
+4
+10
+0
+20
+0
+10
+${width}
+20
+0
+10
+${width}
+20
+${height}
+10
+0
+20
+${height}
+10
+0
+20
+0
+`;
+    } else if (shapeType === "circle") {
+        dxfContent += `
+0
+CIRCLE
+8
+0
+10
+${width / 2}
+20
+${height / 2}
+30
+0
+40
+${width / 2}
+`;
     }
 
-    console.log("Exporting DXF...");
+    if (holeDiameter > 0) {
+        dxfContent += `
+0
+CIRCLE
+8
+0
+10
+${holeX}
+20
+${holeY}
+30
+0
+40
+${holeDiameter / 2}
+`;
+    }
 
-    const objects = canvas.getObjects(); 
+    dxfContent += `
+0
+ENDSEC
+0
+SECTION
+2
+EOF
+`;
 
-    let dxfContent = "0\nSECTION\n2\nHEADER\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nBLOCKS\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n";
-
-    objects.forEach(obj => {
-        if (obj.type === "rect") {
-            dxfContent += `0\nLWPOLYLINE\n8\n0\n10\n${obj.left}\n20\n${obj.top}\n10\n${obj.left + obj.width}\n20\n${obj.top}\n10\n${obj.left + obj.width}\n20\n${obj.top + obj.height}\n10\n${obj.left}\n20\n${obj.top + obj.height}\n`;
-        } else if (obj.type === "circle") {
-            dxfContent += `0\nCIRCLE\n8\n0\n10\n${obj.left}\n20\n${obj.top}\n40\n${obj.radius}\n`;
-        }
-    });
-
-    dxfContent += "0\nENDSEC\n0\nEOF";
-
-    const blob = new Blob([dxfContent], { type: "application/dxf" });
+    const blob = new Blob([dxfContent], { type: "text/plain" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "drawing.dxf";
+    link.download = "shape.dxf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 }
+
 
 window.exportDXF = exportDXF;
