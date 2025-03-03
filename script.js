@@ -103,7 +103,7 @@ window.onload = function () {
     window.drawShape = drawShape;
 };
 
-function function exportDXF() {
+function exportDXF() {
     let dxfContent = `
 0
 SECTION
