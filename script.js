@@ -220,3 +220,5 @@ EOF
 }
 
 window.exportDXF = exportDXF;
+
+document.getElementById("exportDXFBtn").addEventListener("click", exportDXF);
