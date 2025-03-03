@@ -1,5 +1,7 @@
+let canvas; // Declare the canvas variable globally
+
 window.onload = function () {
-    const canvas = new fabric.Canvas("canvas", { backgroundColor: "white" });
+    canvas = new fabric.Canvas("canvas", { backgroundColor: "white" });
 
     function drawShape() {
         canvas.clear();
@@ -13,7 +15,6 @@ window.onload = function () {
         let holeOffsetY = parseFloat(document.getElementById("holeOffsetY").value) * 10;
 
         let shape;
-
         const shapeLeft = 100;
         const shapeTop = 100;
 
@@ -75,18 +76,15 @@ window.onload = function () {
 
         canvas.add(shape);
 
-        // Ensure holes stay inside the object
         if (holeDiameter > 0) {
             if (holeDiameter >= width || holeDiameter >= height) {
                 alert("Hole is too large for the shape!");
                 return;
             }
 
-            // Calculate absolute hole position from the edges
             let holeX = shapeLeft + holeOffsetX;
             let holeY = shapeTop + holeOffsetY;
 
-            // Prevent hole from exceeding shape boundaries
             holeX = Math.max(shapeLeft + holeDiameter / 2, Math.min(holeX, shapeLeft + width - holeDiameter / 2));
             holeY = Math.max(shapeTop + holeDiameter / 2, Math.min(holeY, shapeTop + height - holeDiameter / 2));
 
@@ -105,20 +103,16 @@ window.onload = function () {
     window.drawShape = drawShape;
 };
 
-// Place exportDXF function OUTSIDE of window.onload to make sure it's globally accessible
 function exportDXF() {
-    console.log("Exporting DXF...");
-
-    // Get the Fabric.js canvas instance
-    const canvas = fabric.Canvas.activeInstance;
     if (!canvas) {
         console.error("Canvas not found!");
         return;
     }
 
-    const objects = canvas.getObjects(); // Get Fabric.js objects
+    console.log("Exporting DXF...");
 
-    // Generate a DXF string (basic implementation)
+    const objects = canvas.getObjects(); 
+
     let dxfContent = "0\nSECTION\n2\nHEADER\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nBLOCKS\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n";
 
     objects.forEach(obj => {
@@ -127,12 +121,10 @@ function exportDXF() {
         } else if (obj.type === "circle") {
             dxfContent += `0\nCIRCLE\n8\n0\n10\n${obj.left}\n20\n${obj.top}\n40\n${obj.radius}\n`;
         }
-        // Add other shapes as needed
     });
 
     dxfContent += "0\nENDSEC\n0\nEOF";
 
-    // Create a blob and trigger a download
     const blob = new Blob([dxfContent], { type: "application/dxf" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -142,5 +134,4 @@ function exportDXF() {
     document.body.removeChild(link);
 }
 
-// Attach exportDXF to the global window object so it can be accessed from HTML
 window.exportDXF = exportDXF;
