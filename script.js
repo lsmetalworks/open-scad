@@ -217,4 +217,3 @@ EOF
     document.body.removeChild(link);
 }
 
-window.exportDXF = export DXF;
