@@ -13,26 +13,35 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 20px;
+            margin: 0;
+            padding: 10px;
         }
         .container {
             display: flex;
-            justify-content: space-around;
-            align-items: flex-start;
-            margin-top: 20px;
+            flex-direction: column; /* Stack on smaller screens */
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
         }
         #canvas-container {
             border: 1px solid #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 400px;
-            height: 400px;
+            width: 90vw;  /* Responsive width */
+            max-width: 500px; /* Max width for large screens */
+            height: 90vw; /* Keep aspect ratio */
+            max-height: 500px;
             position: relative;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
         }
         input, select, button {
             margin: 5px;
-            padding: 5px;
+            padding: 10px;
+            font-size: 16px; /* Bigger font for mobile */
         }
         button {
             cursor: pointer;
@@ -40,11 +49,20 @@
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 8px 12px;
+            padding: 10px 15px;
             border-radius: 5px;
         }
         button:hover {
             background-color: #45a049;
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row; /* Side-by-side layout on larger screens */
+            }
+            #canvas-container {
+                width: 400px;
+                height: 400px;
+            }
         }
     </style>
 </head>
@@ -74,10 +92,10 @@
             <label>Hole Diameter:</label>
             <input type="number" id="holeDiameter" min="0" max="12" value="1">
             <br>
-            <label>Hole Offset from Left Edge:</label>
+            <label>Hole Offset X:</label>
             <input type="number" id="holeOffsetX" min="0" max="24" value="2">
             <br>
-            <label>Hole Offset from Top Edge:</label>
+            <label>Hole Offset Y:</label>
             <input type="number" id="holeOffsetY" min="0" max="24" value="2">
             <br>
             <button onclick="drawShape()">Generate Shape</button>
@@ -86,11 +104,10 @@
 
         <!-- Canvas Container -->
         <div id="canvas-container">
-            <canvas id="canvas" width="400" height="400"></canvas>
+            <canvas id="canvas"></canvas>
         </div>
     </div>
 
-    <!-- Ensure script.js is loaded after the page is fully rendered -->
     <script src="script.js"></script>
 </body>
 </html>
