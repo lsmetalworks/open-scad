@@ -58,12 +58,12 @@ window.onload = function () {
     }
 
     function exportDXF() {
-        if (!canvas) {
-            console.error("Canvas not found!");
+        if (!window.DxfWriter) {
+            console.error("DxfWriter is not loaded correctly!");
             return;
         }
 
-        const dxf = new DxfWriter();
+        const dxf = new window.DxfWriter();
         canvas.getObjects().forEach(obj => {
             if (obj.type === "rect") {
                 dxf.addRectangle(obj.left, obj.top, obj.width, obj.height);
