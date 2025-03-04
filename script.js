@@ -1,85 +1,94 @@
-function updateForm() {
-    const shape = document.getElementById('shape').value;
-    const paramsDiv = document.getElementById('params');
-    paramsDiv.innerHTML = '';
+// Initialize Fabric.js canvas
+const canvas = new fabric.Canvas('canvas', {
+  backgroundColor: '#f0f0f0',
+  selection: true
+});
+let currentShape = null;
 
-    if (shape === 'rectangle' || shape === 'square') {
-        paramsDiv.innerHTML = `
-            <div class="form-group">
-                <label>Width (mm):</label>
-                <input type="number" id="width" min="1" value="100">
-            </div>
-            ${shape === 'rectangle' ? `
-            <div class="form-group">
-                <label>Height (mm):</label>
-                <input type="number" id="height" min="1" value="50">
-            </div>` : ''}
-            <div class="form-group">
-                <label>Add Corner Holes?</label>
-                <input type="checkbox" id="holes" checked>
-            </div>
-            <div class="form-group">
-                <label>Hole Diameter (mm):</label>
-                <input type="number" id="holeDiameter" min="1" value="5" ${shape === 'circle' ? 'disabled' : ''}>
-            </div>
-        `;
-    } else if (shape === 'circle') {
-        paramsDiv.innerHTML = `
-            <div class="form-group">
-                <label>Diameter (mm):</label>
-                <input type="number" id="diameter" min="1" value="50">
-            </div>
-        `;
-    }
-}
+// Function to add a parametric rectangle
+document.getElementById('addRect').addEventListener('click', () => {
+  const width = parseInt(document.getElementById('widthInput').value);
+  const height = parseInt(document.getElementById('heightInput').value);
+  const rect = new fabric.Rect({
+    left: 100,
+    top: 100,
+    width: width,
+    height: height,
+    fill: '#ffffff',
+    stroke: '#000000',
+    strokeWidth: 2,
+    selectable: true,
+    hasControls: true // Allows resizing
+  });
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
+  currentShape = rect;
+  canvas.renderAll();
+});
 
-function generateDXF() {
-    const shape = document.getElementById('shape').value;
-    let dxfContent = "0\nSECTION\n2\nENTITIES\n";
+// Function to add a parametric circle
+document.getElementById('addCircle').addEventListener('click', () => {
+  const radius = parseInt(document.getElementById('radiusInput').value);
+  const circle = new fabric.Circle({
+    left: 200,
+    top: 200,
+    radius: radius,
+    fill: '#ffffff',
+    stroke: '#000000',
+    strokeWidth: 2,
+    selectable: true,
+    hasControls: true
+  });
+  canvas.add(circle);
+  canvas.setActiveObject(circle);
+  currentShape = circle;
+  canvas.renderAll();
+});
 
-    if (shape === 'rectangle' || shape === 'square') {
-        const width = parseFloat(document.getElementById('width').value);
-        const height = shape === 'rectangle' ? parseFloat(document.getElementById('height').value) : width;
-        const holes = document.getElementById('holes').checked;
-        const holeDiameter = parseFloat(document.getElementById('holeDiameter').value);
+// Track the selected shape
+canvas.on('selection:created', (e) => {
+  currentShape = e.target;
+});
+canvas.on('selection:updated', (e) => {
+  currentShape = e.target;
+});
+canvas.on('selection:cleared', () => {
+  currentShape = null;
+});
 
-        dxfContent += `0\nPOLYLINE\n8\n0\n66\n1\n70\n1\n`;
-        dxfContent += `0\nVERTEX\n8\n0\n10\n0\n20\n0\n`;
-        dxfContent += `0\nVERTEX\n8\n0\n10\n${width}\n20\n0\n`;
-        dxfContent += `0\nVERTEX\n8\n0\n10\n${width}\n20\n${height}\n`;
-        dxfContent += `0\nVERTEX\n8\n0\n10\n0\n20\n${height}\n`;
-        dxfContent += `0\nSEQEND\n`;
+// Function to add a hole (circular for simplicity)
+document.getElementById('addHole').addEventListener('click', () => {
+  if (!currentShape) {
+    alert('Please select a shape first!');
+    return;
+  }
 
-        if (holes) {
-            const r = holeDiameter / 2;
-            const offset = r + 1;
-            const corners = [
-                [offset, offset],
-                [width - offset, offset],
-                [width - offset, height - offset],
-                [offset, height - offset]
-            ];
-            corners.forEach(([x, y]) => {
-                dxfContent += `0\nCIRCLE\n8\n0\n10\n${x}\n20\n${y}\n40\n${r}\n`;
-            });
-        }
-    } else if (shape === 'circle') {
-        const diameter = parseFloat(document.getElementById('diameter').value);
-        const radius = diameter / 2;
-        dxfContent += `0\nCIRCLE\n8\n0\n10\n${radius}\n20\n${radius}\n40\n${radius}\n`;
-    }
+  // Create a small circle as a "hole"
+  const hole = new fabric.Circle({
+    left: currentShape.left + currentShape.width / 2 - 10, // Center of the shape
+    top: currentShape.top + currentShape.height / 2 - 10,
+    radius: 10,
+    fill: 'rgba(0,0,0,0)', // Transparent fill
+    stroke: '#ff0000',
+    strokeWidth: 1,
+    selectable: true,
+    originX: 'center',
+    originY: 'center'
+  });
 
-    dxfContent += "0\nENDSEC\n0\nEOF";
+  // Group the shape and hole, then use clipPath to subtract
+  const group = new fabric.Group([currentShape, hole], {
+    left: currentShape.left,
+    top: currentShape.top
+  });
+  
+  // Use the hole as a clipPath (inverted to "cut out")
+  currentShape.clipPath = hole;
+  currentShape.clipPath.inverted = true; // Cuts the hole out
 
-    const blob = new Blob([dxfContent], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${shape}.dxf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-}
-
-document.addEventListener('DOMContentLoaded', updateForm);
+  // Remove the original shape and add the modified one
+  canvas.remove(currentShape);
+  canvas.add(currentShape); // Add back the clipped shape
+  currentShape = null; // Reset selection
+  canvas.renderAll();
+});
