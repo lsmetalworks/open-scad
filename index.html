@@ -1,28 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DXF Generator</title>
-    <link rel="stylesheet" href="/styles.css">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sheet Metal Parts Builder</title>
 </head>
 <body>
-    <h1>DXF Generator Tool</h1>
-    <div id="shapeForm">
-        <div class="form-group">
-            <label for="shape">Select Shape:</label>
-            <select id="shape" onchange="updateForm()">
-                <option value="rectangle">Rectangle</option>
-                <option value="square">Square</option>
-                <option value="circle">Circle</option>
-            </select>
-        </div>
-        <div id="params">
-            <!-- Dynamic parameters will be injected here -->
-        </div>
-        <button onclick="generateDXF()">Generate DXF</button>
-    </div>
-    <script src="/script.js"></script>
+  <div id="root"></div>
 </body>
 </html>
