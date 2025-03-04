@@ -43,7 +43,6 @@ function generateDXF() {
         const holes = document.getElementById('holes').checked;
         const holeDiameter = parseFloat(document.getElementById('holeDiameter').value);
 
-        // Rectangle/Square outline
         dxfContent += `0\nPOLYLINE\n8\n0\n66\n1\n70\n1\n`;
         dxfContent += `0\nVERTEX\n8\n0\n10\n0\n20\n0\n`;
         dxfContent += `0\nVERTEX\n8\n0\n10\n${width}\n20\n0\n`;
@@ -51,15 +50,14 @@ function generateDXF() {
         dxfContent += `0\nVERTEX\n8\n0\n10\n0\n20\n${height}\n`;
         dxfContent += `0\nSEQEND\n`;
 
-        // Add corner holes if selected
         if (holes) {
             const r = holeDiameter / 2;
-            const offset = r + 1; // Small offset from edges
+            const offset = r + 1;
             const corners = [
-                [offset, offset],              // Bottom-left
-                [width - offset, offset],      // Bottom-right
-                [width - offset, height - offset], // Top-right
-                [offset, height - offset]      // Top-left
+                [offset, offset],
+                [width - offset, offset],
+                [width - offset, height - offset],
+                [offset, height - offset]
             ];
             corners.forEach(([x, y]) => {
                 dxfContent += `0\nCIRCLE\n8\n0\n10\n${x}\n20\n${y}\n40\n${r}\n`;
@@ -73,7 +71,6 @@ function generateDXF() {
 
     dxfContent += "0\nENDSEC\n0\nEOF";
 
-    // Download the DXF file
     const blob = new Blob([dxfContent], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -85,5 +82,4 @@ function generateDXF() {
     window.URL.revokeObjectURL(url);
 }
 
-// Initialize form on page load
 document.addEventListener('DOMContentLoaded', updateForm);
