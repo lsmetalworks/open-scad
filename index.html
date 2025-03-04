@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sheet Metal Parts Builder</title>
+  <title>Parts Builder</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <style>
+    #canvas-container { border: 1px solid #ccc; }
+    button { margin: 5px; }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div>
+    <button id="addRect">Add Rectangle</button>
+    <button id="addCircle">Add Circle</button>
+    <button id="addHole">Add Hole</button>
+    <label>Width: <input id="widthInput" type="number" value="100"></label>
+    <label>Height: <input id="heightInput" type="number" value="50"></label>
+    <label>Radius: <input id="radiusInput" type="number" value="40"></label>
+  </div>
+  <div id="canvas-container">
+    <canvas id="canvas" width="600" height="400"></canvas>
+  </div>
+
+  <script>
+    // JavaScript goes here (see below)
+  </script>
 </body>
 </html>
