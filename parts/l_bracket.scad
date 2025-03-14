@@ -1,4 +1,4 @@
-length1 = 50; // Placeholder
+length1 = 50;
 length2 = 75;
 thickness = 2;
 bend_angle = 90;
