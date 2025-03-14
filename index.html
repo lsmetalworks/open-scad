@@ -1,28 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Parts Builder</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-  <style>
-    #canvas-container { border: 1px solid #ccc; }
-    button { margin: 5px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Sheet Metal Parts Creator</title>
 </head>
 <body>
-  <div>
-    <button id="addRect">Add Rectangle</button>
-    <button id="addCircle">Add Circle</button>
-    <button id="addHole">Add Hole</button>
-    <label>Width: <input id="widthInput" type="number" value="100"></label>
-    <label>Height: <input id="heightInput" type="number" value="50"></label>
-    <label>Radius: <input id="radiusInput" type="number" value="40"></label>
-  </div>
-  <div id="canvas-container">
-    <canvas id="canvas" width="600" height="400"></canvas>
-  </div>
+    <h1>Create Your Part</h1>
+    <form id="part-form">
+        <label>Part Type:
+            <select name="part" id="part-select">
+                <option value="l_bracket">L-Bracket</option>
+                <option value="flat_plate">Flat Plate</option>
+            </select>
+        </label><br><br>
+        <label>Length 1: <input type="number" name="length1" id="length1" min="10" max="500"> mm</label><br>
+        <label>Length 2: <input type="number" name="length2" id="length2" min="10" max="500"> mm</label><br>
+        <label>Thickness: <input type="number" name="thickness" id="thickness" min="1" max="5"> mm</label><br>
+        <button type="submit">Generate Parameters</button>
+    </form>
+    <div>
+        <h3>Output</h3>
+        <pre id="output"></pre>
+    </div>
+    <p>Copy the output into OpenSCAD to export your DXF.</p>
 
-  <script>
-    // JavaScript goes here (see below)
-  </script>
+    <script>
+        document.getElementById('part-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const part = document.getElementById('part-select').value;
+            const length1 = document.getElementById('length1').value;
+            const length2 = document.getElementById('length2').value;
+            const thickness = document.getElementById('thickness').value;
+            const output = `Part: ${part}\nlength1 = ${length1};\nlength2 = ${length2};\nthickness = ${thickness};`;
+            document.getElementById('output').textContent = output;
+        });
+    </script>
 </body>
 </html>
